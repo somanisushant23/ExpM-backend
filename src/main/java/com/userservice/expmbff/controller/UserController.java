@@ -4,12 +4,14 @@ import com.userservice.expmbff.dto.LoginProfileDto;
 import com.userservice.expmbff.dto.SuccessResponse;
 import com.userservice.expmbff.dto.UserProfileDto;
 import com.userservice.expmbff.dto.UserProfileResponse;
+import com.userservice.expmbff.exceptions.IncorrectDataException;
 import com.userservice.expmbff.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.HttpServerErrorException;
 
 @RestController
 @RequestMapping("/users")
@@ -23,7 +25,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    /*@PostMapping("signup")
+    @PostMapping("signup")
     public ResponseEntity<SuccessResponse> createUserProfile(@Valid @RequestBody UserProfileDto userProfileDto) {
         logger.info("Creating user profile {}", userProfileDto.getEmail());
         return userService.createUserProfile(userProfileDto.getEmail(), userProfileDto.getName(), userProfileDto.getPassword());
@@ -34,6 +36,8 @@ public class UserController {
         logger.info("Login in user {}", loginProfileDto.getEmail());
         return userService.loginUser(loginProfileDto.getEmail(), loginProfileDto.getPassword());
     }
+
+    /*
 
     @GetMapping
     public ResponseEntity<UserProfileResponse> getUserProfile(@RequestHeader("email") String email) {

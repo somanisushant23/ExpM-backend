@@ -22,6 +22,7 @@ public class UserEntity extends BaseModelEntity{
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     private boolean isEmailVerified;
@@ -31,5 +32,8 @@ public class UserEntity extends BaseModelEntity{
     // One user can have multiple devices
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
+    @Column(nullable = true)
     private Set<DeviceEntity> devices = new HashSet<>();
+
+    private String privilege = UserLimit.FREE_USER.toString();
 }

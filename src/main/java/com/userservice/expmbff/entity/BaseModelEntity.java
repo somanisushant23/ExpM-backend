@@ -1,13 +1,8 @@
 package com.userservice.expmbff.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -18,5 +13,19 @@ public class BaseModelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date createdOn, updatedOn;
+    private Long createdOn;
+
+    private Long updatedOn;
+
+    @PrePersist
+    protected void onCreate() {
+        long now = System.currentTimeMillis();
+        this.createdOn = now;
+        this.updatedOn = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedOn = System.currentTimeMillis();
+    }
 }
