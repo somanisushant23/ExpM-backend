@@ -37,6 +37,9 @@ public class TransactionEntity extends BaseModelEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
+    private String category;
+
     @Column(nullable = true)
     private String description;
 

@@ -22,6 +22,10 @@ public class TransactionDto {
     @Size(max = 100, message = "Email must be less than or equal to 100 characters")
     private String description;
 
+    @NotBlank(message = "Category is required")
+    @Size(max = 20, message = "Email must be less than or equal to 20 characters")
+    private String category;
+
     @NotNull(message = "Amount is required")
     private Integer amount;
 
