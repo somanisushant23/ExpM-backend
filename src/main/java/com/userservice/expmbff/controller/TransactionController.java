@@ -3,7 +3,6 @@ package com.userservice.expmbff.controller;
 import com.userservice.expmbff.dto.SuccessResponse;
 import com.userservice.expmbff.dto.TransactionDto;
 import com.userservice.expmbff.dto.TransactionResponseDto;
-import com.userservice.expmbff.dto.UpdatedSinceRequest;
 import com.userservice.expmbff.exceptions.IncorrectDataException;
 import com.userservice.expmbff.service.TransactionService;
 import jakarta.validation.Valid;
@@ -28,12 +27,12 @@ public class TransactionController {
 
     //@RequestAttribute(name = "jwtClaims") Claims jwtClaims
     @PostMapping
-    public ResponseEntity<TransactionResponseDto> createTransaction(
-            @Valid @RequestBody TransactionDto transactionDto,
+    public ResponseEntity<List<TransactionResponseDto>> createTransaction(
+            @Valid @RequestBody List<TransactionDto> transactionDtos,
             @RequestAttribute(name = "jwtSubject") String authenticatedEmail
     ) throws IncorrectDataException {
-        logger.info("Creating transaction for amount {} and title {} by {}", transactionDto.getAmount(), transactionDto.getTitle(), authenticatedEmail);
-        return transactionService.createTransaction(transactionDto, authenticatedEmail);
+        logger.info("Creating {} transactions by {}", transactionDtos.size(), authenticatedEmail);
+        return transactionService.createTransactions(transactionDtos, authenticatedEmail);
     }
 
     @PatchMapping("/{id}")
@@ -72,13 +71,13 @@ public class TransactionController {
         return transactionService.getTransactionById(id, authenticatedEmail);
     }
 
-    @GetMapping("/updated-since")
+    @GetMapping("/new-transactions")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsUpdatedSince(
-            @Valid @RequestBody UpdatedSinceRequest request,
+            @RequestParam(name = "updatedTime") Long updatedTime,
             @RequestAttribute(name = "jwtSubject") String authenticatedEmail
     ) throws IncorrectDataException {
-        logger.info("Fetching transactions updated since {} for {}", request.getUpdatedTime(), authenticatedEmail);
-        return transactionService.getTransactionsUpdatedSince(request.getUpdatedTime(), authenticatedEmail);
+        logger.info("Fetching transactions updated since {} for {}", updatedTime, authenticatedEmail);
+        return transactionService.getTransactionsUpdatedSince(updatedTime, authenticatedEmail);
     }
 
 }

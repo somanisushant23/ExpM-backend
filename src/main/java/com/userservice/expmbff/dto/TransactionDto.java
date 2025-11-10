@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
 
 @Data
@@ -33,6 +33,6 @@ public class TransactionDto {
     private TransactionType transactionType;
 
     @NotNull(message = "Transaction date is required")
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
 }

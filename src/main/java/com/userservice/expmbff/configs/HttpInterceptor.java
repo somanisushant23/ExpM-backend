@@ -23,7 +23,10 @@ public class HttpInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         request.setAttribute("startTime", System.currentTimeMillis());
-        requestId = UUID.randomUUID().toString();
+        String requestId = request.getHeader("requestId");
+        if(requestId == null || requestId.isEmpty()) {
+            requestId = UUID.randomUUID().toString();
+        }
         response.setHeader("requestId", requestId);
 
         if(shouldSkipAuth(request)) {

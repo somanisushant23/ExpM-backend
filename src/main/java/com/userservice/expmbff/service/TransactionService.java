@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 public class TransactionService {
@@ -26,31 +27,40 @@ public class TransactionService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<TransactionResponseDto> createTransaction(TransactionDto transactionDto, String authenticatedEmail) throws IncorrectDataException {
+    @Transactional
+    public ResponseEntity<List<TransactionResponseDto>> createTransactions(List<TransactionDto> transactionDtos, String authenticatedEmail) throws IncorrectDataException {
         // Find authenticated user
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
 
-        TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setTitle(transactionDto.getTitle());
-        transactionEntity.setDescription(transactionDto.getDescription());
-        transactionEntity.setAmount(transactionDto.getAmount());
-        transactionEntity.setTransactionDate(transactionDto.getTransactionDate());
-        transactionEntity.setTransactionType(transactionDto.getTransactionType());
-        transactionEntity.setUser(user);
-        transactionEntity.setCategory(transactionDto.getCategory());
-        transactionRepository.save(transactionEntity);
-        TransactionResponseDto responseDto = new TransactionResponseDto();
-        responseDto.setId(transactionEntity.getId());
-        responseDto.setTitle(transactionEntity.getTitle());
-        responseDto.setCategory(transactionEntity.getCategory());
-        responseDto.setDescription(transactionEntity.getDescription());
-        responseDto.setAmount(transactionEntity.getAmount());
-        responseDto.setTransactionDate(transactionEntity.getTransactionDate());
-        responseDto.setTransactionType(transactionEntity.getTransactionType().name());
-        responseDto.setCreatedOn(transactionEntity.getCreatedOn());
-        responseDto.setUpdatedOn(transactionEntity.getUpdatedOn());
-        return ResponseEntity.ok(responseDto);
+        List<TransactionResponseDto> responseDtos = new ArrayList<>();
+
+        for (TransactionDto transactionDto : transactionDtos) {
+            TransactionEntity transactionEntity = new TransactionEntity();
+            transactionEntity.setTitle(transactionDto.getTitle());
+            transactionEntity.setDescription(transactionDto.getDescription());
+            transactionEntity.setAmount(transactionDto.getAmount());
+            transactionEntity.setTransactionDate(transactionDto.getTransactionDate());
+            transactionEntity.setTransactionType(transactionDto.getTransactionType());
+            transactionEntity.setUser(user);
+            transactionEntity.setCategory(transactionDto.getCategory());
+            transactionRepository.save(transactionEntity);
+
+            TransactionResponseDto responseDto = new TransactionResponseDto();
+            responseDto.setId(transactionEntity.getId());
+            responseDto.setTitle(transactionEntity.getTitle());
+            responseDto.setCategory(transactionEntity.getCategory());
+            responseDto.setDescription(transactionEntity.getDescription());
+            responseDto.setAmount(transactionEntity.getAmount());
+            responseDto.setTransactionDate(transactionEntity.getTransactionDate());
+            responseDto.setTransactionType(transactionEntity.getTransactionType().name());
+            responseDto.setCreatedOn(transactionEntity.getCreatedOn());
+            responseDto.setUpdatedOn(transactionEntity.getUpdatedOn());
+
+            responseDtos.add(responseDto);
+        }
+
+        return ResponseEntity.ok(responseDtos);
     }
 
     @Transactional

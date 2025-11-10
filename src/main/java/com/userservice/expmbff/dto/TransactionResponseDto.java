@@ -2,7 +2,7 @@ package com.userservice.expmbff.dto;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +14,6 @@ public class TransactionResponseDto {
     private Long id;
     private String title, description, category, transactionType;
     private Integer amount;
-    private Date transactionDate;
+    private LocalDate transactionDate;
     private Long createdOn, updatedOn;
 }
