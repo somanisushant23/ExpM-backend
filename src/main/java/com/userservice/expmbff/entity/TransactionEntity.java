@@ -11,7 +11,7 @@ import jakarta.persistence.EnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transaction_info")
@@ -44,5 +44,5 @@ public class TransactionEntity extends BaseModelEntity {
     private String description;
 
     @Column(nullable = false)
-    private Date transactionDate;
+    private LocalDate transactionDate;
 }
