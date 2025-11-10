@@ -63,33 +63,6 @@ public class TransactionService {
         return ResponseEntity.ok(responseDtos);
     }
 
-    public ResponseEntity<TransactionResponseDto> createTransaction(TransactionDto transactionDto, String authenticatedEmail) throws IncorrectDataException {
-        // Find authenticated user
-        UserEntity user = userRepository.findByEmail(authenticatedEmail)
-                .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
-
-        TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setTitle(transactionDto.getTitle());
-        transactionEntity.setDescription(transactionDto.getDescription());
-        transactionEntity.setAmount(transactionDto.getAmount());
-        transactionEntity.setTransactionDate(transactionDto.getTransactionDate());
-        transactionEntity.setTransactionType(transactionDto.getTransactionType());
-        transactionEntity.setUser(user);
-        transactionEntity.setCategory(transactionDto.getCategory());
-        transactionRepository.save(transactionEntity);
-        TransactionResponseDto responseDto = new TransactionResponseDto();
-        responseDto.setId(transactionEntity.getId());
-        responseDto.setTitle(transactionEntity.getTitle());
-        responseDto.setCategory(transactionEntity.getCategory());
-        responseDto.setDescription(transactionEntity.getDescription());
-        responseDto.setAmount(transactionEntity.getAmount());
-        responseDto.setTransactionDate(transactionEntity.getTransactionDate());
-        responseDto.setTransactionType(transactionEntity.getTransactionType().name());
-        responseDto.setCreatedOn(transactionEntity.getCreatedOn());
-        responseDto.setUpdatedOn(transactionEntity.getUpdatedOn());
-        return ResponseEntity.ok(responseDto);
-    }
-
     @Transactional
     public ResponseEntity<SuccessResponse> updateTransaction(Long id, TransactionDto patchDto, String authenticatedEmail) throws IncorrectDataException {
         // Locate transaction
