@@ -20,8 +20,12 @@ public class BaseModelEntity {
     @PrePersist
     protected void onCreate() {
         long now = System.currentTimeMillis();
-        this.createdOn = now;
-        this.updatedOn = now;
+        if (this.createdOn == null) {
+            this.createdOn = now;
+        }
+        if (this.updatedOn == null) {
+            this.updatedOn = now;
+        }
     }
 
     @PreUpdate
