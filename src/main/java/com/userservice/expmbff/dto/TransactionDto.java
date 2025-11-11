@@ -35,4 +35,6 @@ public class TransactionDto {
     @NotNull(message = "Transaction date is required")
     private LocalDate transactionDate;
 
+    private Long createdOn;
+
 }

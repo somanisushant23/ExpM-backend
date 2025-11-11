@@ -44,6 +44,9 @@ public class TransactionService {
             transactionEntity.setTransactionType(transactionDto.getTransactionType());
             transactionEntity.setUser(user);
             transactionEntity.setCategory(transactionDto.getCategory());
+            if (transactionDto.getCreatedOn() != null) {
+                transactionEntity.setCreatedOn(transactionDto.getCreatedOn());
+            }
             transactionRepository.save(transactionEntity);
 
             TransactionResponseDto responseDto = new TransactionResponseDto();
