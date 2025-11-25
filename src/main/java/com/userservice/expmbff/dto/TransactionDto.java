@@ -37,4 +37,7 @@ public class TransactionDto {
 
     private Long createdOn;
 
+    @NotBlank(message = "ClientId is required")
+    private String clientId;
+
 }

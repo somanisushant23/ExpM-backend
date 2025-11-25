@@ -16,4 +16,5 @@ public class TransactionResponseDto {
     private Integer amount;
     private LocalDate transactionDate;
     private Long createdOn, updatedOn;
+    private String clientId;
 }

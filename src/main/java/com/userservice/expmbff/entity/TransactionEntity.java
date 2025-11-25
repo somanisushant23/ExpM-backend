@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "transaction_info")
@@ -45,4 +46,7 @@ public class TransactionEntity extends BaseModelEntity {
 
     @Column(nullable = false)
     private LocalDate transactionDate;
+
+    @Column(nullable = false)
+    private UUID clientId;
 }
