@@ -8,6 +8,8 @@ import com.userservice.expmbff.entity.UserEntity;
 import com.userservice.expmbff.exceptions.IncorrectDataException;
 import com.userservice.expmbff.repository.TransactionRepository;
 import com.userservice.expmbff.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 public class TransactionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
@@ -33,6 +37,7 @@ public class TransactionService {
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
 
+        logger.info("Creating transaction {}  for user {}", transactionDtos, authenticatedEmail);
         List<TransactionResponseDto> responseDtos = new ArrayList<>();
 
         for (TransactionDto transactionDto : transactionDtos) {
@@ -44,10 +49,11 @@ public class TransactionService {
             transactionEntity.setTransactionType(transactionDto.getTransactionType());
             transactionEntity.setUser(user);
             transactionEntity.setCategory(transactionDto.getCategory());
+            transactionEntity.setClientId(UUID.fromString(transactionDto.getClientId()));
             if (transactionDto.getCreatedOn() != null) {
                 transactionEntity.setCreatedOn(transactionDto.getCreatedOn());
             }
-            transactionRepository.save(transactionEntity);
+            TransactionEntity savedEntity = transactionRepository.save(transactionEntity);
 
             TransactionResponseDto responseDto = new TransactionResponseDto();
             responseDto.setId(transactionEntity.getId());
@@ -59,6 +65,7 @@ public class TransactionService {
             responseDto.setTransactionType(transactionEntity.getTransactionType().name());
             responseDto.setCreatedOn(transactionEntity.getCreatedOn());
             responseDto.setUpdatedOn(transactionEntity.getUpdatedOn());
+            responseDto.setClientId(savedEntity.getClientId().toString());
 
             responseDtos.add(responseDto);
         }
@@ -75,6 +82,7 @@ public class TransactionService {
         if (entity.getUser() == null || !entity.getUser().getEmail().equalsIgnoreCase(authenticatedEmail)) {
             throw new IncorrectDataException("Unauthorized");
         }
+        logger.info("Updating transaction {}  for user {}", patchDto, authenticatedEmail);
         // Apply non-null fields
         boolean changed = false;
         if (patchDto.getTitle() != null) {
@@ -103,6 +111,12 @@ public class TransactionService {
             changed = true;
         }
 
+        UUID ZERO_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        if(entity.getClientId().equals(ZERO_UUID)) {
+            entity.setClientId(UUID.fromString(patchDto.getClientId()));
+            changed = true;
+        }
+
         if (!changed) {
             return ResponseEntity.ok(new SuccessResponse("No changes supplied"));
         }
@@ -123,6 +137,7 @@ public class TransactionService {
         return ResponseEntity.ok(new SuccessResponse("Transaction deleted successfully"));
     }
 
+    @Transactional
     public ResponseEntity<List<TransactionResponseDto>> getAllTransactions(String authenticatedEmail) throws IncorrectDataException {
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
@@ -147,6 +162,7 @@ public class TransactionService {
         return ResponseEntity.ok(responseDtos);
     }
 
+    @Transactional
     public ResponseEntity<TransactionResponseDto> getTransactionById(Long id, String authenticatedEmail) throws IncorrectDataException {
         TransactionEntity entity = transactionRepository.findById(id)
                 .orElseThrow(() -> new IncorrectDataException("Transaction not found"));
@@ -166,6 +182,7 @@ public class TransactionService {
         return ResponseEntity.ok(dto);
     }
 
+    @Transactional
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsUpdatedSince(Long updatedTime, String authenticatedEmail) throws IncorrectDataException {
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
@@ -184,6 +201,7 @@ public class TransactionService {
             dto.setTransactionType(tx.getTransactionType().name());
             dto.setCreatedOn(tx.getCreatedOn());
             dto.setUpdatedOn(tx.getUpdatedOn());
+            dto.setClientId(tx.getClientId().toString());
             return dto;
         }).toList();
         return ResponseEntity.ok(dtos);
