@@ -1,6 +1,7 @@
 package com.userservice.expmbff.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.userservice.expmbff.entity.enums.UserLimit;
 import jakarta.persistence.*;
 import lombok.*;
 

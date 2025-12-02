@@ -1,6 +1,6 @@
 package com.userservice.expmbff.dto;
 
-import com.userservice.expmbff.entity.TransactionType;
+import com.userservice.expmbff.entity.enums.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -16,14 +16,14 @@ import jakarta.validation.constraints.NotNull;
 public class TransactionDto {
 
     @NotBlank(message = "Title is required")
-    @Size(max = 30, message = "Email must be less than or equal to 30 characters")
+    @Size(max = 30, message = "Title must be less than or equal to 30 characters")
     private String title;
 
-    @Size(max = 100, message = "Email must be less than or equal to 100 characters")
+    @Size(max = 100, message = "Description must be less than or equal to 100 characters")
     private String description;
 
     @NotBlank(message = "Category is required")
-    @Size(max = 20, message = "Email must be less than or equal to 20 characters")
+    @Size(max = 20, message = "Category must be less than or equal to 20 characters")
     private String category;
 
     @NotNull(message = "Amount is required")
@@ -36,6 +36,8 @@ public class TransactionDto {
     private LocalDate transactionDate;
 
     private Long createdOn;
+
+    private Long updatedOn;
 
     @NotBlank(message = "ClientId is required")
     private String clientId;
