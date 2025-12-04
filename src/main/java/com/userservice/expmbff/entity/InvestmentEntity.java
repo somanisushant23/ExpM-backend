@@ -27,9 +27,6 @@ public class InvestmentEntity extends BaseModelEntity {
     @Column(nullable = false)
     private InvestmentType investmentType;//FD, RD, Shares, MF, Gold, etc.
 
-    @Column(nullable = true)
-    private String idNumber;//FD number, RD number, etc.
-
     @Column(nullable = false)
     private Integer amount;//principal amount
 

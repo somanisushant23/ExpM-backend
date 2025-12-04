@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -27,8 +28,10 @@ public class InvestmentDto {
     private Float expectedReturnRate;//in percentage
 
     @NotNull(message = "Transaction date is required")
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     private LocalDate creationDate;
 
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     private LocalDate maturityDate;
 
     @Size(max = 100, message = "Description must be less than or equal to 100 characters")

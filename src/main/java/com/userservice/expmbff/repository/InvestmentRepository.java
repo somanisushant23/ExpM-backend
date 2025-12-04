@@ -22,5 +22,8 @@ public interface InvestmentRepository extends JpaRepository<InvestmentEntity, Lo
     @Query("SELECT i FROM InvestmentEntity i WHERE i.user = :user AND (i.updatedOn >= :timestamp OR i.createdOn >= :timestamp)")
     Optional<List<InvestmentEntity>> findAllByUserAndUpdatedOrCreatedSince(@Param("user") UserEntity user,
                                                                            @Param("timestamp") Long timestamp);
+
+    Optional<InvestmentEntity> findByClientId(java.util.UUID clientId);
+
     void deleteById(Long id);
 }

@@ -3,6 +3,7 @@ import com.userservice.expmbff.entity.enums.InvestmentType;
 import lombok.*;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -12,9 +13,11 @@ import java.time.LocalDate;
 public class InvestmentResponseDto {
     private Long id;
     private InvestmentType investmentType;
-    private String idNumber, description, clientId;
-    private Integer amount;
+    private String description, clientId, amount;
     private Float expectedReturnRate;
-    private LocalDate creationDate,maturityDate;
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    private LocalDate creationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    private LocalDate maturityDate;
     private Long createdOn, updatedOn;
 }

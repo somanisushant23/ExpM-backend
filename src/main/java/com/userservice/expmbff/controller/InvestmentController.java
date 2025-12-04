@@ -39,4 +39,22 @@ public class InvestmentController {
         logger.info("Fetching all investments for {}", authenticatedEmail);
         return investmentService.getAllInvestments(authenticatedEmail);
     }
+
+    @PatchMapping
+    public ResponseEntity<InvestmentResponseDto> updateInvestment(
+            @Valid @RequestBody InvestmentDto investmentDtos,
+            @RequestAttribute(name = "jwtSubject") String authenticatedEmail
+    ) throws IncorrectDataException {
+        logger.info("Updating {} investments by {}", investmentDtos.getClientId(), authenticatedEmail);
+        return investmentService.updateInvestment(investmentDtos, authenticatedEmail);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SuccessResponse> deleteInvestment(
+            @PathVariable("id") Long id,
+            @RequestAttribute(name = "jwtSubject") String authenticatedEmail
+    ) throws IncorrectDataException {
+        logger.info("Deleting investment {} by {}", id, authenticatedEmail);
+        return investmentService.deleteInvestment(id, authenticatedEmail);
+    }
 }
