@@ -53,6 +53,9 @@ public class TransactionService {
             if (transactionDto.getCreatedOn() != null) {
                 transactionEntity.setCreatedOn(transactionDto.getCreatedOn());
             }
+            if(transactionDto.getUpdatedOn() != null) {
+                transactionEntity.setUpdatedOn(transactionDto.getUpdatedOn());
+            }
             TransactionEntity savedEntity = transactionRepository.save(transactionEntity);
 
             TransactionResponseDto responseDto = new TransactionResponseDto();

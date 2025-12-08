@@ -1,4 +1,4 @@
-package com.userservice.expmbff.entity;
+package com.userservice.expmbff.entity.enums;
 
 public enum UserLimit {
     FREE_USER,
