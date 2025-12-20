@@ -27,7 +27,7 @@ public class InvestmentController {
     public ResponseEntity<List<InvestmentResponseDto>> createInvestment(
             @Valid @RequestBody List<InvestmentDto> investmentDtos,
             @RequestAttribute(name = "jwtSubject") String authenticatedEmail
-    ) throws IncorrectDataException {
+    ) throws Exception {
         logger.info("Creating {} investments by {}", investmentDtos.size(), authenticatedEmail);
         return investmentService.createInvestments(investmentDtos, authenticatedEmail);
     }
@@ -35,7 +35,7 @@ public class InvestmentController {
     @GetMapping
     public ResponseEntity<List<InvestmentResponseDto>> getAllInvestments(
             @RequestAttribute(name = "jwtSubject") String authenticatedEmail
-    ) throws IncorrectDataException {
+    ) throws Exception {
         logger.info("Fetching all investments for {}", authenticatedEmail);
         return investmentService.getAllInvestments(authenticatedEmail);
     }
@@ -44,7 +44,7 @@ public class InvestmentController {
     public ResponseEntity<InvestmentResponseDto> updateInvestment(
             @Valid @RequestBody InvestmentDto investmentDtos,
             @RequestAttribute(name = "jwtSubject") String authenticatedEmail
-    ) throws IncorrectDataException {
+    ) throws Exception {
         logger.info("Updating {} investments by {}", investmentDtos.getClientId(), authenticatedEmail);
         return investmentService.updateInvestment(investmentDtos, authenticatedEmail);
     }

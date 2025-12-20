@@ -4,12 +4,12 @@ import com.userservice.expmbff.dto.InvestmentDto;
 import com.userservice.expmbff.dto.InvestmentResponseDto;
 import com.userservice.expmbff.dto.SuccessResponse;
 import com.userservice.expmbff.entity.InvestmentEntity;
-import com.userservice.expmbff.entity.TransactionEntity;
 import com.userservice.expmbff.entity.UserEntity;
 import com.userservice.expmbff.exceptions.IncorrectDataException;
 import com.userservice.expmbff.repository.InvestmentRepository;
 import com.userservice.expmbff.repository.UserRepository;
 import com.userservice.expmbff.utils.AppUtility;
+import com.userservice.expmbff.utils.EncryptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class InvestmentService {
 
     @Transactional
     public ResponseEntity<List<InvestmentResponseDto>> createInvestments(List<InvestmentDto> investmentDtos, String authenticatedEmail)
-            throws IncorrectDataException {
+            throws Exception {
         // Find authenticated user
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
@@ -46,12 +46,13 @@ public class InvestmentService {
             // Map DTO to entity
             InvestmentEntity entity = new InvestmentEntity();
             entity.setInvestmentType(dto.getInvestmentType());
-            entity.setAmount(dto.getAmount());
+            entity.setAmount(EncryptUtil.encrypt(dto.getAmount()));
             entity.setExpectedReturnRate(dto.getExpectedReturnRate());
             entity.setCreationDate(dto.getCreationDate());
             entity.setMaturityDate(dto.getMaturityDate());
             entity.setDescription(dto.getDescription());
             entity.setCreatedOn(System.currentTimeMillis());
+            entity.setInvestmentAccountNumber(EncryptUtil.encrypt(dto.getInvestmentAccountNumber()));
             entity.setUser(user);
             entity.setClientId(UUID.fromString(dto.getClientId()));
             if(dto.getCreatedOn() != null) {
@@ -62,11 +63,12 @@ public class InvestmentService {
             responseDto.setId(savedEntity.getId());
             responseDto.setClientId(savedEntity.getClientId().toString());
             responseDto.setInvestmentType(savedEntity.getInvestmentType());
-            responseDto.setAmount(maskData(entity.getAmount().toString(), user));
+            responseDto.setAmount(maskData(dto.getAmount().toString(), user));
             responseDto.setExpectedReturnRate(savedEntity.getExpectedReturnRate());
             responseDto.setCreatedOn(savedEntity.getCreatedOn());
             responseDto.setMaturityDate(savedEntity.getMaturityDate());
             responseDto.setDescription(savedEntity.getDescription());
+            responseDto.setInvestmentAccountNumber(dto.getInvestmentAccountNumber());
             responseDto.setCreationDate(savedEntity.getCreationDate());
             responseDto.setUpdatedOn(savedEntity.getUpdatedOn());
             responseDtos.add(responseDto);
@@ -76,7 +78,7 @@ public class InvestmentService {
 
     @Transactional
     public ResponseEntity<List<InvestmentResponseDto>> getAllInvestments(String authenticatedEmail)
-            throws IncorrectDataException {
+            throws Exception {
         // Find authenticated user
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
@@ -93,9 +95,14 @@ public class InvestmentService {
             dto.setId(entity.getId());
             dto.setClientId(entity.getClientId().toString());
             dto.setInvestmentType(entity.getInvestmentType());
-            dto.setAmount(maskData(entity.getAmount().toString(), user));
+            try {
+                dto.setAmount(EncryptUtil.decrypt(entity.getAmount()));
+            } catch (Exception e) {
+                dto.setAmount("******");
+            }
             dto.setExpectedReturnRate(entity.getExpectedReturnRate());
             dto.setCreationDate(entity.getCreationDate());
+            dto.setInvestmentAccountNumber(EncryptUtil.decrypt(entity.getInvestmentAccountNumber()));
             dto.setMaturityDate(entity.getMaturityDate());
             dto.setDescription(entity.getDescription());
             dto.setCreatedOn(entity.getCreatedOn());
@@ -107,7 +114,7 @@ public class InvestmentService {
 
     @Transactional
     public ResponseEntity<InvestmentResponseDto> updateInvestment(InvestmentDto dto, String authenticatedEmail)
-            throws IncorrectDataException {
+            throws Exception {
         // Find authenticated user
         UserEntity user = userRepository.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new IncorrectDataException("Unauthorized"));
@@ -120,7 +127,8 @@ public class InvestmentService {
 
         InvestmentEntity entity = existingEntity.get();
         entity.setInvestmentType(dto.getInvestmentType());
-        entity.setAmount(dto.getAmount());
+        entity.setAmount(EncryptUtil.encrypt(dto.getAmount()));
+        entity.setInvestmentAccountNumber(EncryptUtil.encrypt(dto.getInvestmentAccountNumber()));
         entity.setExpectedReturnRate(dto.getExpectedReturnRate());
         entity.setCreationDate(dto.getCreationDate());
         entity.setMaturityDate(dto.getMaturityDate());
@@ -134,6 +142,8 @@ public class InvestmentService {
         responseDto.setClientId(savedEntity.getClientId().toString());
         responseDto.setInvestmentType(savedEntity.getInvestmentType());
         responseDto.setAmount(maskData(entity.getAmount().toString(), user));
+        responseDto.setInvestmentAccountNumber(EncryptUtil.decrypt(entity.getInvestmentAccountNumber()));
+        responseDto.setAmount(EncryptUtil.decrypt(entity.getAmount().toString()));
         responseDto.setExpectedReturnRate(savedEntity.getExpectedReturnRate());
         responseDto.setCreatedOn(savedEntity.getCreatedOn());
         responseDto.setMaturityDate(savedEntity.getMaturityDate());
