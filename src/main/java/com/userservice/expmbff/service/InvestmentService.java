@@ -51,6 +51,7 @@ public class InvestmentService {
             entity.setCreationDate(dto.getCreationDate());
             entity.setMaturityDate(dto.getMaturityDate());
             entity.setDescription(dto.getDescription());
+            entity.setInstitutionName(dto.getInstitutionName());
             entity.setCreatedOn(System.currentTimeMillis());
             entity.setInvestmentAccountNumber(EncryptUtil.encrypt(dto.getInvestmentAccountNumber()));
             entity.setUser(user);
@@ -71,6 +72,7 @@ public class InvestmentService {
             responseDto.setInvestmentAccountNumber(dto.getInvestmentAccountNumber());
             responseDto.setCreationDate(savedEntity.getCreationDate());
             responseDto.setUpdatedOn(savedEntity.getUpdatedOn());
+            responseDto.setInstitutionName(savedEntity.getInstitutionName());
             responseDtos.add(responseDto);
         }
         return ResponseEntity.ok(responseDtos);
@@ -107,6 +109,7 @@ public class InvestmentService {
             dto.setDescription(entity.getDescription());
             dto.setCreatedOn(entity.getCreatedOn());
             dto.setUpdatedOn(entity.getUpdatedOn());
+            dto.setInstitutionName(entity.getInstitutionName());
             responseDtos.add(dto);
         }
         return ResponseEntity.ok(responseDtos);
@@ -135,6 +138,7 @@ public class InvestmentService {
         entity.setDescription(dto.getDescription());
         entity.setUpdatedOn(System.currentTimeMillis());
         entity.setClientId(UUID.fromString(dto.getClientId()));
+        entity.setInstitutionName(dto.getInstitutionName());
         entity.setUser(user);
         InvestmentEntity savedEntity = investmentRepository.save(entity);
         InvestmentResponseDto responseDto = new InvestmentResponseDto();
@@ -150,6 +154,7 @@ public class InvestmentService {
         responseDto.setDescription(savedEntity.getDescription());
         responseDto.setCreationDate(savedEntity.getCreationDate());
         responseDto.setUpdatedOn(savedEntity.getUpdatedOn());
+        responseDto.setInstitutionName(savedEntity.getInstitutionName());
         return ResponseEntity.ok(responseDto);
     }
 

@@ -2,6 +2,9 @@ package com.userservice.expmbff.utils;
 
 import com.userservice.expmbff.entity.UserEntity;
 import com.userservice.expmbff.entity.enums.UserLimit;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 
 public class AppUtility {
 
@@ -47,4 +50,29 @@ public class AppUtility {
         }*/
     }
 
+    /**
+     * Converts month and year to a timestamp (milliseconds since epoch)
+     * Returns the timestamp for the first day of the given month at midnight UTC
+     * @param month The month (1-12)
+     * @param year The year (e.g., 2025)
+     * @return Timestamp in milliseconds since epoch
+     */
+    public static Long getTimestampForMonth(int month, int year) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
+        return firstDayOfMonth.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();
+    }
+
+    /**
+     * Converts month and year strings to a timestamp (milliseconds since epoch)
+     * Returns the timestamp for the first day of the given month at midnight UTC
+     * @param month The month as string (e.g., "01" or "1")
+     * @param year The year as string (e.g., "2025")
+     * @return Timestamp in milliseconds since epoch
+     */
+    public static Long getTimestampForMonth(String month, String year) {
+        int monthInt = Integer.parseInt(month);
+        int yearInt = Integer.parseInt(year);
+        return getTimestampForMonth(monthInt, yearInt);
+    }
 }

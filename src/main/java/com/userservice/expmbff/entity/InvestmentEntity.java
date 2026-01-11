@@ -46,6 +46,9 @@ public class InvestmentEntity extends BaseModelEntity {
     private String description;
 
     @Column(nullable = false)
+    private String institutionName;
+
+    @Column(nullable = false)
     private UUID clientId;
 
     @ManyToOne(fetch = FetchType.LAZY)

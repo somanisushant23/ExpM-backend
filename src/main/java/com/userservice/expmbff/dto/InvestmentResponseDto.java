@@ -21,4 +21,5 @@ public class InvestmentResponseDto {
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     private LocalDate maturityDate;
     private Long createdOn, updatedOn;
+    private String institutionName;
 }

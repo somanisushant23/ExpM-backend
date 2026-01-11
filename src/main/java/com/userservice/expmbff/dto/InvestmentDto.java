@@ -44,4 +44,7 @@ public class InvestmentDto {
 
     @NotBlank(message = "ClientId is required")
     private String clientId;
+
+    @NotBlank(message = "Institution name is required")
+    private String institutionName;//like ICICI, HDFC, SBI, etc.
 }
