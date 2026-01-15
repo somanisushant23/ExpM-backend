@@ -27,8 +27,11 @@ public class InvestmentEntity extends BaseModelEntity {
     @Column(nullable = false)
     private InvestmentType investmentType;//FD, RD, Shares, MF, Gold, etc.
 
+    @Column(nullable = true)
+    private String investmentAccountNumber;
+
     @Column(nullable = false)
-    private Integer amount;//principal amount
+    private String amount;//principal amount
 
     @Column(nullable = true)
     private Float expectedReturnRate;//in percentage
@@ -41,6 +44,9 @@ public class InvestmentEntity extends BaseModelEntity {
 
     @Column(nullable = true)
     private String description;
+
+    @Column(nullable = false)
+    private String institutionName;
 
     @Column(nullable = false)
     private UUID clientId;

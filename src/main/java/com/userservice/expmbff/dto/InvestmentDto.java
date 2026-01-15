@@ -22,6 +22,9 @@ public class InvestmentDto {
     @Size(max = 20, message = "ID Number must be less than or equal to 20 characters")
     private String idNumber;//FD number, RD number, etc.
 
+    @Size(max = 30, message = "Description must be less than or equal to 30 characters")
+    private String investmentAccountNumber;
+
     @NotNull(message = "Amount is required")
     private Integer amount;//principal amount
 
@@ -41,4 +44,7 @@ public class InvestmentDto {
 
     @NotBlank(message = "ClientId is required")
     private String clientId;
+
+    @NotBlank(message = "Institution name is required")
+    private String institutionName;//like ICICI, HDFC, SBI, etc.
 }
